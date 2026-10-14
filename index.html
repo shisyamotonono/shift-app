@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Baranシフト管理
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+</head>
+
+
+<body>
+
+
+<header>
+
+    <h1>
+        Baranシフト管理
+    </h1>
+
+</header>
+
+
+<main class="container">
+
+
+    <!-- =========================
+         シフト作成
+    ========================== -->
+
+    <section
+        id="page-create"
+        class="page active"
+    >
+
+
+        <div class="card">
+
+            <h2>
+                シフト作成
+            </h2>
+
+
+            <label
+                for="createDate"
+            >
+                勤務日
+            </label>
+
+
+            <input
+                id="createDate"
+                type="date"
+                onchange="displayShiftCreation()"
+            >
+
+        </div>
+
+
+
+        <div class="card">
+
+            <h2>
+                この日のスタッフを追加
+            </h2>
+
+
+            <label
+                for="addShiftStaff"
+            >
+                スタッフ
+            </label>
+
+
+            <select
+                id="addShiftStaff"
+            >
+
+                <option value="">
+                    スタッフを選択
+                </option>
+
+            </select>
+
+
+            <button
+                class="primary-btn"
+                onclick="addStaffToDate()"
+            >
+                この日に追加
+            </button>
+
+        </div>
+
+
+        <!-- 過去の勤務場所候補 -->
+
+        <datalist
+            id="locationSuggestions"
+        >
+        </datalist>
+
+
+        <!-- シフト入力欄 -->
+
+        <div
+            id="shiftCreationArea"
+        >
+        </div>
+
+
+        <div class="card">
+
+            <button
+                class="primary-btn"
+                onclick="saveDailyShifts()"
+            >
+                この日のシフトを保存
+            </button>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =========================
+         日別確認
+    ========================== -->
+
+    <section
+        id="page-daily"
+        class="page"
+    >
+
+
+        <div class="card">
+
+            <h2>
+                日別シフト確認
+            </h2>
+
+
+            <div class="date-nav">
+
+
+                <button
+                    class="gray-btn"
+                    onclick="moveDailyDate(-1)"
+                >
+                    ← 前日
+                </button>
+
+
+                <input
+                    id="dailyDate"
+                    type="date"
+                    onchange="displayDailyShift()"
+                >
+
+
+                <button
+                    class="gray-btn"
+                    onclick="moveDailyDate(1)"
+                >
+                    翌日 →
+                </button>
+
+
+            </div>
+
+        </div>
+
+
+        <div
+            id="dailyShiftArea"
+        >
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =========================
+         カレンダー
+    ========================== -->
+
+    <section
+        id="page-calendar"
+        class="page"
+    >
+
+
+        <div class="card">
+
+            <h2>
+                カレンダー
+            </h2>
+
+
+            <div class="month-nav">
+
+
+                <button
+                    class="gray-btn"
+                    onclick="moveCalendarMonth(-1)"
+                >
+                    ← 前月
+                </button>
+
+
+                <input
+                    id="calendarMonth"
+                    type="month"
+                    onchange="displayCalendar()"
+                >
+
+
+                <button
+                    class="gray-btn"
+                    onclick="moveCalendarMonth(1)"
+                >
+                    翌月 →
+                </button>
+
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div
+                id="calendar"
+                class="calendar"
+            >
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =========================
+         スタッフ管理
+    ========================== -->
+
+    <section
+        id="page-staff"
+        class="page"
+    >
+
+
+        <div class="card">
+
+            <h2>
+                スタッフ管理
+            </h2>
+
+
+            <p class="help-text">
+
+                スタッフ名と基本交通費を登録します。
+
+                <br>
+
+                実際の勤務日は日付ごとにスタッフを追加し、
+                交通費は勤務日ごとに変更できます。
+
+            </p>
+
+
+            <label
+                for="staffName"
+            >
+                スタッフ名
+            </label>
+
+
+            <input
+                id="staffName"
+                type="text"
+                placeholder="例：田中 太郎"
+            >
+
+
+            <label
+                for="staffTransport"
+            >
+                基本交通費
+            </label>
+
+
+            <input
+                id="staffTransport"
+                type="number"
+                min="0"
+                placeholder="例：500"
+            >
+
+
+            <div
+                class="checkbox-area"
+            >
+
+                <input
+                    id="staffTransportPending"
+                    type="checkbox"
+                    onchange="toggleStaffTransportPending()"
+                >
+
+
+                <label
+                    for="staffTransportPending"
+                >
+                    基本交通費は未定
+                </label>
+
+            </div>
+
+
+            <button
+                class="primary-btn"
+                onclick="addStaff()"
+            >
+                スタッフを登録
+            </button>
+
+
+        </div>
+
+
+
+        <div class="card">
+
+            <h2>
+                登録済みスタッフ
+            </h2>
+
+
+            <div
+                id="staffList"
+            >
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+</main>
+
+
+
+<!-- =========================
+     下部メニュー
+========================== -->
+
+<nav class="bottom-nav">
+
+
+    <button
+        id="nav-create"
+        class="active"
+        onclick="showPage('create')"
+    >
+
+        シフト作成
+
+    </button>
+
+
+
+    <button
+        id="nav-daily"
+        onclick="showPage('daily')"
+    >
+
+
+        日別確認
+
+    </button>
+
+
+
+    <button
+        id="nav-calendar"
+        onclick="showPage('calendar')"
+    >
+
+
+        カレンダー
+
+    </button>
+
+
+
+    <button
+        id="nav-staff"
+        onclick="showPage('staff')"
+    >
+
+
+        スタッフ
+
+    </button>
+
+
+</nav>
+
+
+<script src="script.js"></script>
+
+
+</body>
+
+</html>
